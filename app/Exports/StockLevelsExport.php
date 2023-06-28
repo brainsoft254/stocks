@@ -49,10 +49,18 @@ class StockLevelsExport  implements FromQuery,WithHeadings,ShouldAutoSize,WithCo
 
 	public function query()
 	{
-		return DB::table("stock_trans")->select(DB::raw("code,get_item_descr(code),sum(if(transign='+',qty,qty*-1)) as qty,get_bprice(code),sum(if(transign='+',qty,qty*-1))*get_bprice(code)"))
-      ->where(["location" => $this->location])
-      ->groupBy("code")
-      ->OrderBy("code", 'asc');
+		if(!$this->location=="ALL"){
+			return DB::table("stock_trans")->select(DB::raw("code,get_item_descr(code),sum(if(transign='+',qty,qty*-1)) as qty,get_bprice(code),sum(if(transign='+',qty,qty*-1))*get_bprice(code)"))
+			->where('location',$this->location)
+		  ->groupBy("code")
+		  ->OrderBy("code", 'asc');
+	
+		}else{
+			return DB::table("stock_trans")->select(DB::raw("code,get_item_descr(code),sum(if(transign='+',qty,qty*-1)) as qty,get_bprice(code),sum(if(transign='+',qty,qty*-1))*get_bprice(code)"))
+		  ->groupBy("code")
+		  ->OrderBy("code", 'asc');
+	
+		}
       //->get();
 
 		//return DB::table('invoices')->select(DB::raw("invno,invdate,clcode,get_client_name(clcode),if(isVatExc(clcode)>0,amount,amount*100/116) as amount,vat,if(isVatExc(clcode)>0,amount+vat,amount) as total"))->whereBetween('invdate',array($this->dfrom,$this->dto))->orderBy('invdate','asc');

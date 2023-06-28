@@ -219,6 +219,23 @@ select factor into v_result from units where code = v_pu;
 return v_result;
 END; $$
 
+drop function if exists get_item_descr $$
+create  function get_item_descr(v_item varchar(50)) returns varchar(100)
+begin
+  declare v_desc varchar(100);
+  select description into v_desc from items where code =v_item;
+  return v_desc;
+end; $$
+
+
+drop function if exists get_bprice $$
+create  function get_bprice(v_item varchar(50)) returns decimal(20,2)
+begin
+  declare v_bprice decimal(20,2) default 0;
+  select bprice into v_bprice from items where code =v_item;
+  return v_bprice;
+end; $$
+
 DROP FUNCTION IF EXISTS get_desc_special; $$
 CREATE DEFINER=`web`@`localhost` FUNCTION get_desc_special(v_item varchar(50), v_client varchar(50))RETURNS varchar(255) 
 BEGIN
@@ -317,7 +334,7 @@ CREATE DEFINER=`web`@`localhost` FUNCTION get_item_qty(v_code varchar(100),v_loc
 BEGIN
 declare v_qty integer  default 0;
 select sum(if(transign='+',qty,qty*-1)) into v_qty from stock_trans where code=v_code and location=v_loc;
-retun v_qty;
+return v_qty;
 END;$$
 
 /*POST SALES ORDER*/
@@ -911,25 +928,25 @@ IF NOT done THEN
                     
               
                     
-                       declare v_vat_control varchar(130);
+                  --      declare v_vat_control varchar(130);
                       
-                      select vat into v_vat_control from settings; 
-                      IF v_wtax>0 THEN 
-                        IF _reverse THEN
-                        call do_gl(v_account,concat(v_code,' ',v_cheque),v_amt,v_date,v_ref,'RECEIPT-REVERSAL','-',v_source,v_staff,v_loc);
-                        call do_gl(v_vat_control,concat(v_code,' ',v_cheque),v_wtax,v_date,v_ref,'WITHHOLDINGTAX-REVERSAL','+',v_source,v_staff,v_loc);
-                        ELSE
-                        call do_gl(v_account,concat(v_code,' ',v_cheque),v_amt,v_date,v_ref,'RECEIPT','+',v_source,v_staff,v_loc);
-                        call do_gl(v_vat_control,concat(v_code,' ',v_cheque),v_wtax,v_date,v_ref,'WITHHOLDINGTAX','+',v_source,v_staff,v_loc);
-                        END IF;
-                      ELSE
-                      IF _reverse THEN
-                      call do_gl(v_account,concat(v_code,' ',v_cheque),v_amt,v_date,v_ref,'RECEIPT-REVERSAL','-',v_source,v_staff,v_loc);
-                      ELSE
-                      call do_gl(v_account,concat(v_code,' ',v_cheque),v_amt,v_date,v_ref,'RECEIPT','+',v_source,v_staff,v_loc);
-                      END IF;
-                    END IF;
-                  end; $$
+                  --     select vat into v_vat_control from settings; 
+                  --     IF v_wtax>0 THEN 
+                  --       IF _reverse THEN
+                  --       call do_gl(v_account,concat(v_code,' ',v_cheque),v_amt,v_date,v_ref,'RECEIPT-REVERSAL','-',v_source,v_staff,v_loc);
+                  --       call do_gl(v_vat_control,concat(v_code,' ',v_cheque),v_wtax,v_date,v_ref,'WITHHOLDINGTAX-REVERSAL','+',v_source,v_staff,v_loc);
+                  --       ELSE
+                  --       call do_gl(v_account,concat(v_code,' ',v_cheque),v_amt,v_date,v_ref,'RECEIPT','+',v_source,v_staff,v_loc);
+                  --       call do_gl(v_vat_control,concat(v_code,' ',v_cheque),v_wtax,v_date,v_ref,'WITHHOLDINGTAX','+',v_source,v_staff,v_loc);
+                  --       END IF;
+                  --     ELSE
+                  --     IF _reverse THEN
+                  --     call do_gl(v_account,concat(v_code,' ',v_cheque),v_amt,v_date,v_ref,'RECEIPT-REVERSAL','-',v_source,v_staff,v_loc);
+                  --     ELSE
+                  --     call do_gl(v_account,concat(v_code,' ',v_cheque),v_amt,v_date,v_ref,'RECEIPT','+',v_source,v_staff,v_loc);
+                  --     END IF;
+                  --   END IF;
+                  -- end; $$
                       
                       drop procedure if exists do_post_ap_invoice$$
                       create  DEFINER='web'@'localhost' procedure do_post_ap_invoice(v_invno varchar(30),v_staff varchar(30),v_reverse boolean,v_location varchar(150))
@@ -1577,13 +1594,13 @@ BEGIN
         sum(if((datediff(current_date,invdate) >(v_rd+1) and datediff(current_date,invdate)<=(v_rd*2)),(amount-amount_paid),0)) as 1stage,
         sum(if((datediff(current_date,invdate) >((v_rd*2)+1) and datediff(current_date,invdate)<=(v_rd*3)),(amount-amount_paid),0)) as 2ndage,
         sum(if(datediff(current_date,invdate) >v_rd*3,(amount-amount_paid),0)) as 3rdage,sum(amount-amount_paid) as total
-        from invoices where 1=1 and if(v_parent,if(v_clcode=-1,getParent(clcode) = v_clcode) ,if(v_clcode=-1,1=1,clcode = v_clcode))  and invdate<= last_day(current_date) and status=1
+        from invoices where 1=1 and if(v_clcode=-1,1=1,if(v_parent,getParent(clcode) = v_clcode,clcode=v_clcode))  and invdate<= last_day(current_date) and status=1
          group by if(v_parent,getParent(clcode),clcode )  having total>v_bal ;
   end; $$
 
   delimiter $$
   Drop procedure if exists do_client_balances $$
-  Create procedure do_client_balances(v_asAtDate date,v_client varchar(25),v_parent smallint v_summary int)
+  Create procedure do_client_balances(v_asAtDate date,v_client varchar(25),v_parent smallint, v_summary int)
   Begin
     declare done int  default 0;
     declare v_parcode varchar(25);
