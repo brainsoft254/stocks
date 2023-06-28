@@ -1,0 +1,16 @@
+<?php
+
+namespace App;
+
+
+use Illuminate\Database\Eloquent\Model;
+
+class sreturn_detail extends Model
+{
+	protected $table="return_details";
+	
+    public function returns()
+	{
+		return $this->belongsTo("App\sreturn","refno","refno");
+	}
+}

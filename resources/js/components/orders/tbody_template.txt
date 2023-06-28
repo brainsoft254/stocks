@@ -1,0 +1,62 @@
+								<tbody class="order-body" v-if="selectedClient">
+<!-- Line Item Begin -->
+									<tr  v-for="(orderitem,rid) in orderitems" :key="rid" id='tr_rid' class='line-item'>
+										<td>
+											<!-- <select v-model="icode" @change=icodeChange($event,$event.target.selectedIndex) class='form-control-grid select2-selection-grid itemcode col-xs-5' name='itemcode[]' id='itemcode_rid' style='border-radius:0px !important;width:auto;'>
+												<option value='-1' selected>--Select Code--</option>
+												<option v-for="(item,index) in items" :key="index"  :value='item.code'>{{item.code}}</option>
+											</select> -->
+											<itemcombo v-model='orderitem.icode' @change="icodeChange($event,$event.target.selectedIndex)"  :options="items.map(item=>({value:item.code,text:item.code}))"/>
+										</td>
+										<td>
+											<!-- <select v-model="idescr" class='form-control-grid select2-selection-grid description col-xs-8' name='description[]' id='description_rid' style='border-radius:0px !important;'>
+												<option :value='-1' selected>--Select Description--</option>
+												<option v-for="item in items" :key='item.code' :value='item.description'>{{item.description}}</option>
+											</select> -->
+											<itemcombo v-model='orderitem.idescr' :options="items.map(item=>({value:item.description,text:item.description}))" />
+											<itemcombo v-model='orderitem.iprice' :options="items.map(item=>({value:item.sprice,text:item.sprice}))" style='display:none;border-radius:0px !important;'/>
+											<itemcombo v-model='orderitem.qinstock' :options="items.map(item=>({value:item.qty_instock,text:item.qty_instock}))" :showselectText=true style='display:none;border-radius:0px !important;'/>
+											<!-- <select class='form-control-grid iprice col-xs-6' name='iprice[]' id='iprice_rid' style='display:none;border-radius:0px !important;'>
+												<option value='0' selected>0</option>
+												<option v-for="(item,key) in items" :key='key' :value='item.sprice' >{{item.sprice}}</option>
+											</select> -->
+											<!-- <select class='form-control-grid iqty col-xs-6' name='iqty[]' id='iqty_rid' style='display:none;border-radius:0px !important;'>
+												<option :value='0' selected>0</option>
+												<option v-for="item in items" :key='item.code' :value='item.qty' >{{item.qty}}</option>
+											</select> -->
+										</td>
+										<td>
+											<!-- <select v-model="iunit" class='form-control-grid uom  col-xs-4' name='uom[]' id='uom_rid' style='border-radius:0px !important ;width: auto' >
+												<option v-for="unit in punits" :key='unit.code' :value='unit.code' >{{unit.description}}</option>
+											</select>
+											<select class='form-control-grid factor  col-xs-4' name='factor[]' id='factor_rid' style='display:none;border-radius:0px !important ;width: auto' >
+												<option v-for="unit in punits" :key='unit.factor' :value='unit.factor' >{{unit.factor}}</option>
+											</select> -->
+											<itemcombo v-model='orderitem.iunit' :options="punits.map(unit=>({value:unit.code,text:unit.description}))" :showselectText=false />
+											<itemcombo v-model='orderitem.ifactor' :options="punits.map(unit=>({value:unit.factor,text:unit.factor}))" :showselectText=false style='display:none;border-radius:0px !important;'/>
+										</td>
+										<td>
+											<input v-model="orderitem.iqty" type='text' name='qty[]' id='qty_rid' class='text-center form-control-grid qty  col-xs-2 '  >
+										</td>
+										<td>
+											<input v-model="orderitem.iprice" type='text' name='price[]' id='price_rid' class='form-control-grid price col-xs-2'  readonly>
+										</td>
+										<td>
+											<!-- <select v-model="ivatable" class='form-control-grid vatable col-xs-6 text-danger' name='vatable[]' id='vatable_rid'>
+												<option value='1' >yes</option>
+												<option value='0' >No</option>
+											</select> -->
+											<itemcombo v-model='orderitem.ihasVat' :options="[{value:1,text:'Yes'},{value:0,text:'No'}]" :showselectText=false />
+										</td>
+										<td>
+											<input v-model='orderitem.ivatamnt' type='text' id='vat_rid'  name='vat[]' class='bg-warning text-right vat form-control-grid vat col-xs-2' readonly=''>
+										</td>
+										<td>
+											<input v-model='orderitem.itotal' type='text' id='total_rid' name='total[]' class='text-right total form-control-grid col-xs-3' readonly=''>
+										</td>
+										<td>
+											<span @click="removeRow(rid)" class='removeLink btn btn-danger btn-xs'  id='remove_${rid}'><i class='fa fa-times'></i></span>
+										</td>
+									</tr>
+<!-- End of Line Item -->
+								</tbody>
