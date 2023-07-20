@@ -18,8 +18,8 @@
 										<div class="input-group">
 											<span class="input-group-addon acct-label success"><i class="fa fa-tags"></i> Client Type</span>
 											<select class="form-control cltype" name="cltype" id="cltype">
-												<option value="1" selected="selected">Parent</option>
-												<option value="0">Child</option>
+												<option value="1">Parent</option>
+												<option value="0" selected="selected">Child</option>
 											</select>
 										</div>
 									</div>	

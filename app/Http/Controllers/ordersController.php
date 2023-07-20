@@ -130,6 +130,7 @@ class ordersController extends Controller
                 $order_d->total=$request->total[$i];
                 
                 $order_d->save();
+                DB::select("call do_post_order('".$nextNo."','".Auth::user()->email."',0)");
             }
             if($request->depositpaid>0){
                 $rct=new receipt;
@@ -163,7 +164,7 @@ class ordersController extends Controller
                 $rctd->lpo='';
                 $rctd->loc=$request->location;
                 $rctd->save();
-            
+                DB::select("CALL do_post_receipt('".$orderrno."','".Auth::user()->email."',0)");
             }            
             DB::commit();
             Stockspro::auditLog("Sales Order-".$request->refno." Created Successfully");
