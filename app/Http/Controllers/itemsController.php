@@ -125,7 +125,7 @@ class itemsController extends Controller
          $this->validate($request,[
             'code'=>'required|alpha_dash',
             'description'=>'required',
-            'barcode'=> 'required|alpha_dash',
+            //'barcode'=> 'required|alpha_dash',
             'status'=> 'required',
             'category'=> 'required|not_in:-1',
             'bprice'=> 'required|between:1,99.99',

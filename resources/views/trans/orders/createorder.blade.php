@@ -148,7 +148,7 @@
 											<select class='form-control iprice col-xs-6' name='iprice[]' id='iprice_0' style='display:none;border-radius:0px !important;'>
 												<option value='-1' selected>0</option>
 												@foreach($items as $item)
-												<option value="{{$item->bprice}}">{{$item->bprice}}</option>
+												<option value="{{$item->sprice}}">{{$item->sprice}}</option>
 												@endforeach
 											</select>
 											<input type="text" style="display:none;" class="form-control iqty" name ="iqty[]" id ="iqty_0" value="0">
@@ -603,7 +603,7 @@
 					"<select class='form-control iprice col-xs-6' name='iprice[]' id='iprice_"+rid+"' style='display:none;border-radius:0px !important;'>"+
 						"<option value='-1' selected>0</option>"+
 						"@foreach($items as $item)"+
-						"<option value='{{$item->bprice}}'>{{$item->bprice}}</option>"+
+						"<option value='{{$item->sprice}}'>{{$item->sprice}}</option>"+
 						"@endforeach"+
 					"</select>"+
 					"<input type='text' style='display:none;' class='form-control iqty' name ='iqty[]' id ='iqty_"+rid+"' value='0'>"+
@@ -658,7 +658,7 @@
 				sync:true,
 				complete:function(xhr){
 					var vlist=JSON.parse(xhr.responseText);
-			      // console.log(vlist.prices);
+			       console.log(vlist.prices);
 			       $('#itemcode_'+rid).html('').append(vlist.code);
 			       $('#description_'+rid).html('').append(vlist.desc);
 			       $('#iprice_'+rid).html('').append(vlist.prices);
