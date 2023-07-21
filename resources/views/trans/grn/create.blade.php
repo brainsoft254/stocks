@@ -167,9 +167,9 @@
 											</select>
 										</td>
 										<td><input type="text" name="qty[]" id="qty_0" class="text-center  form-control qty  " value="1" ></td>
-										<td><input type="text" name="price[]" id="price_0" class="form-control price " value="0" readonly></td>
+										<td><input type="text" name="price[]" id="price_0" class="form-control price " value="0"></td>
 										<td>
-											<select class="form-control vatable col-xs-6 text-danger" name="vatable[]" id="vatable_0"'>
+											<select class="form-control vatable col-xs-6 text-danger" name="vatable[]" id="vatable_0">
 												<option value="1">yes</option>
 												<option value="0" selected="selected">No</option>
 											</select>
