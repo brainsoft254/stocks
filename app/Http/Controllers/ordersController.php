@@ -43,7 +43,7 @@ class ordersController extends Controller
         $locations=location::where('status',1)->orderBy('code','desc')->get();
         $clients=client::where('status',1)->orderBy('name','asc')->get();
         $discounts=discount::where('status',1)->orderBy('code','asc')->get();
-        $clients=DB::table("clients")->select(DB::raw("code,name"))->where('status',1)->orderBy('code','asc')->get();
+        //$clients=DB::table("clients")->select(DB::raw("code,name"))->where('status',1)->orderBy('code','asc')->get();
         $accounts=account::where('status',1)->whereRaw("type in ('bank','cash')")->get();
         
         if(!(Stockspro::get_settings()->ispos)){

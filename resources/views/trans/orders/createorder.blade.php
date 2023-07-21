@@ -48,7 +48,7 @@
 									<select class="form-control client" name="client" id="client">
 										<option value="-1" selected="selected">--Select Client--</option>
 										@foreach($clients as $client)
-										<option value="{{$client->code}}" >{{$client->name}}</option>
+										<option value="{{$client->code}}" >{{$client->tel}}-{{$client->name}}</option>
 										@endforeach
 									</select>
 									<input style="display: none;" type="text" name="vatstat" id="vatstat" value="0">
