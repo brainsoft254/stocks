@@ -198,7 +198,7 @@
 <script type="text/javascript">
 	$(function(){
 		
-		$('#status,#acct_income,#category,#acct_inventory,#acct_cog').select2({theme:'bootstrap',width:'100%',dropdownParent: $('.modal')});
+		//$('#status,#acct_income,#category,#acct_inventory,#acct_cog').select2({theme:'bootstrap',width:'100%',dropdownParent: $('body')});
 
 		function resetModalFormErrors() {
 			$('.form-group').removeClass('has-error');
