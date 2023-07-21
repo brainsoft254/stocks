@@ -263,7 +263,9 @@
 					message:data,
 					size:'large',
 					backdrop:true,
-					onEscape:function(){location.reload();},
+					onEscape:function(){
+						 location.reload();
+					},
 				});
 			});
 		});
