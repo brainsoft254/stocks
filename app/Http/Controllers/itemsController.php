@@ -18,7 +18,7 @@ class itemsController extends Controller
      */
     public function index()
     {
-        $items=items::orderBy('category','asc')->get();
+        $items=items::orderBy('id','desc')->get();
         return view('settings.items.index')->with(['items'=>$items]);
     }
     
