@@ -19,6 +19,7 @@ class ModifyClientPobox extends Migration
             $table->string('pinno')->default('')->nullable()->change();
             $table->string('contact_person')->default('')->nullable()->change();
             $table->string('concell')->default('')->nullable()->change();
+            $table->string('email')->default('')->nullable()->change();
         });
     }
 
@@ -35,6 +36,7 @@ class ModifyClientPobox extends Migration
             $table->string('pinno')->default('')->nullabe()->change();
             $table->string('contact_person')->default('')->nullabe()->change();
             $table->string('concell')->default('')->nullabe()->change();
+            $table->string('email')->default('')->nullabe()->change();
         });
     }
 }
