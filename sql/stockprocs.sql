@@ -355,35 +355,35 @@ END;$$
 DROP PROCEDURE IF EXISTS do_order_details_posting;$$
 CREATE DEFINER=`web`@`localhost` PROCEDURE `do_order_details_posting`(v_refno varchar(30),v_staff varchar(30))
 begin
-declare v_icode varchar(30);
-declare v_bprice decimal(20,2) default 0;
-declare v_sprice decimal(20,2) default 0;
-declare v_qty decimal(20,2) default 0;
-declare v_vat decimal(20,2) default 0;
-declare v_total decimal(20,2) default 0;
-declare v_location varchar(255);
-declare v_vat_control varchar(255);
-declare v_factor integer;
-declare v_trandate date;
-declare v_punit varchar(150);
-declare done int default 0;
+  declare v_icode varchar(30);
+  declare v_bprice decimal(20,2) default 0;
+  declare v_sprice decimal(20,2) default 0;
+  declare v_qty decimal(20,2) default 0;
+  declare v_vat decimal(20,2) default 0;
+  declare v_total decimal(20,2) default 0;
+  declare v_location varchar(255);
+  declare v_vat_control varchar(255);
+  declare v_factor integer;
+  declare v_trandate date;
+  declare v_punit varchar(150);
+  declare done int default 0;
 
-declare q1 cursor for  
-select trandate,location,icode,get_item_cost(icode) as cost,b.qty,b.rate,uom,get_pu_factor(uom),b.vat,b.total from orders a, order_details b where a.refno=b.refno and a.refno=v_refno;
-declare continue handler for sqlstate '02000' set done=1;
-open q1;
-repeat
-fetch q1 into v_trandate,v_location,v_icode,v_bprice,v_qty,v_sprice,v_punit,v_factor,v_vat,v_total;
-IF NOT done THEN
-        call do_gl(get_cog_act(v_icode),concat(v_icode,'-',v_qty,'*',v_bprice),v_qty*v_bprice,v_trandate,v_refno,'COG','+','ORDER',v_staff,v_location);#cost of Good Sold
-        call do_gl(get_stock_act(v_icode),concat(v_icode,'-',v_qty,'*',v_sprice),v_qty*v_bprice,v_trandate,v_refno,'STOCKS','-','ORDER',v_staff,v_location);#stocks Contrl
-       /*call do_gl(get_revenue_act(v_icode),concat(v_qty,'*',v_sprice),v_total-v_vat,v_trandate,v_refno,'SALES','-','ORDER',v_staff);#revenue ACCT
-       call do_gl(get_vat_act(),concat(v_qty,'*',v_sprice),v_vat,v_trandate,v_refno,'VAT','-','ORDER',v_staff);#Vat Control*/
-       call do_itran(v_icode,v_refno,v_trandate,'-',v_qty,v_bprice,v_location,v_staff,"ORDER",v_punit,v_factor);
-       END IF;
-       until done end repeat;
-       close q1;
-       END; $$
+  declare q1 cursor for  
+  select trandate,location,icode,get_item_cost(icode) as cost,b.qty,b.rate,uom,get_pu_factor(uom),b.vat,b.total from orders a, order_details b where a.refno=b.refno and a.refno=v_refno;
+  declare continue handler for sqlstate '02000' set done=1;
+  open q1;
+  repeat
+  fetch q1 into v_trandate,v_location,v_icode,v_bprice,v_qty,v_sprice,v_punit,v_factor,v_vat,v_total;
+  IF NOT done THEN
+    call do_gl(get_cog_act(v_icode),concat(v_icode,'-',v_qty,'*',v_bprice),v_qty*v_bprice,v_trandate,v_refno,'COG','+','ORDER',v_staff,v_location);#cost of Good Sold
+    call do_gl(get_stock_act(v_icode),concat(v_icode,'-',v_qty,'*',v_sprice),v_qty*v_bprice,v_trandate,v_refno,'STOCKS','-','ORDER',v_staff,v_location);#stocks Contrl
+    /*call do_gl(get_revenue_act(v_icode),concat(v_qty,'*',v_sprice),v_total-v_vat,v_trandate,v_refno,'SALES','-','ORDER',v_staff);#revenue ACCT
+    call do_gl(get_vat_act(),concat(v_qty,'*',v_sprice),v_vat,v_trandate,v_refno,'VAT','-','ORDER',v_staff);#Vat Control*/
+    call do_itran(v_icode,v_refno,v_trandate,'-',v_qty,v_bprice,v_location,v_staff,"ORDER",v_punit,v_factor);
+    END IF;
+    until done end repeat;
+  close q1;
+END; $$
        
        DROP PROCEDURE IF EXISTS do_reverse_order_posting;$$
        CREATE DEFINER=`web`@`localhost` PROCEDURE `do_reverse_order_posting`(v_refno varchar(30),v_staff varchar(30))
@@ -480,7 +480,10 @@ IF NOT done THEN
        INSERT INTO invoices(invno,invdate,clcode,clname,amount,vat,discount,discrate,location,source,staff,lpo,terms,salesrep,voucherno,status,isvatexc)
        VALUES(v_invno,v_trandate,v_clno,v_clname,v_amount,v_vat,v_discount,v_discrate,v_location,"PO",v_staff,v_refno,"NET 30",v_salesrep,v_voucherno,0,v_isVatExc);
        if v_ispos and v_depositpaid then
-        insert into receipt_details(rno,invno,invdate,due,paid,lpo,source,loc) values(v_deporno,v_invno,v_trandate,v_depositpaid,v_depositpaid,v_refno,v_clno,v_location);
+        insert into receipts(rno,trandate,bankdate,clcode,account,amount,balcf,wtax,factax,remarks,chequeno,location,refno,parent,staff,inwords,status,rtype)
+        values(v_deporno,v_trandate,v_trandate,v_clno,v_depositacct,v_depositpaid,(v_amount-v_depositpaid),0,0,v_remarks,'',v_location,v_refno,0,v_staff,'',0,0);
+
+        insert into receipt_details(rno,invno,invdate,due,paid,lpo,source,loc) values(v_deporno,v_invno,v_trandate,v_amount,v_depositpaid,v_refno,v_clno,v_location);
        end if;
        Call do_order_invoice_d(v_refno,v_invno);
        UPDATE orders SET status=1,invno=v_invno WHERE refno=v_refno;

@@ -113,7 +113,7 @@ class receiptsController extends Controller
             }
         
         }
-       // DB::select("CALL do_post_receipt('".$rct->rno."','".Auth::user()->email."',0)");
+        DB::select("CALL do_post_receipt('".$rct->rno."','".Auth::user()->email."',0)");
         DB::commit();
         Stockspro::auditLog("Receipt RCT-".$rct->rno." Created Successfully");
         return "Receipt Rct-".$rct->rno." Created Successfully";

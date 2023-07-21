@@ -132,40 +132,40 @@ class ordersController extends Controller
                 $order_d->save();
                 DB::select("call do_post_order('".$nextNo."','".Auth::user()->email."',0)");
             }
-            if($request->depositpaid>0){
-                $rct=new receipt;
-                $rct->rno=$orderrno;
-                $rct->trandate=$request->trandate;
-                $rct->bankdate=$request->trandate;
-                $rct->clcode=$request->client;
-                $rct->account=$request->account;
-                $rct->amount=$request->depositpaid;
-                $rct->balcf=$request->balcf;
-                $rct->wtax=0;
-                $rct->factax=0;
-                $rct->remarks=$request->remarks;
-                $rct->chequeno='';
-                $rct->location=$request->location;
-                $rct->refno='';
-                $rct->parent=0;
-                $rct->staff=Auth::user()->email;
-                $rct->inwords="";
-                $rct->status=0;
-                $rct->rtype=0;
-                $rct->save();
+            // if($request->depositpaid>0){
+            //     $rct=new receipt;
+            //     $rct->rno=$orderrno;
+            //     $rct->trandate=$request->trandate;
+            //     $rct->bankdate=$request->trandate;
+            //     $rct->clcode=$request->client;
+            //     $rct->account=$request->account;
+            //     $rct->amount=$request->depositpaid;
+            //     $rct->balcf=$request->balcf;
+            //     $rct->wtax=0;
+            //     $rct->factax=0;
+            //     $rct->remarks=$request->remarks;
+            //     $rct->chequeno='';
+            //     $rct->location=$request->location;
+            //     $rct->refno='';
+            //     $rct->parent=0;
+            //     $rct->staff=Auth::user()->email;
+            //     $rct->inwords="";
+            //     $rct->status=0;
+            //     $rct->rtype=0;
+            //     $rct->save();
             
-                $rctd=new receipt_detail;
-                $rctd->rno=$orderrno;
-                $rctd->invno=$nextNo;
-                $rctd->invdate=$request->trandate;
-                $rctd->due=str_replace(",","",$request->grosstotal);
-                $rctd->paid=str_replace(",","",$request->depositpaid);
-                $rctd->source=$request->client;
-                $rctd->lpo='';
-                $rctd->loc=$request->location;
-                $rctd->save();
-                DB::select("CALL do_post_receipt('".$orderrno."','".Auth::user()->email."',0)");
-            }            
+                // $rctd=new receipt_detail;
+                // $rctd->rno=$orderrno;
+                // $rctd->invno=$nextNo;
+                // $rctd->invdate=$request->trandate;
+                // $rctd->due=str_replace(",","",$request->grosstotal);
+                // $rctd->paid=str_replace(",","",$request->depositpaid);
+                // $rctd->source=$request->client;
+                // $rctd->lpo='';
+                // $rctd->loc=$request->location;
+                // $rctd->save();
+                //DB::select("CALL do_post_receipt('".$orderrno."','".Auth::user()->email."',0)");
+            //}            
             DB::commit();
             Stockspro::auditLog("Sales Order-".$request->refno." Created Successfully");
             return "Sales Order-".$request->refno." Created Successfully";
