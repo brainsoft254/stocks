@@ -99,8 +99,8 @@
 								<div class="input-group">
 									<span class="input-group-addon warning">Vatable?</span>
 									<select class="form-control" name="vatable" id="vatable">
-										<option value="1" selected="selected">Yes</option>
-										<option value="0">No</option>
+										<option value="1">Yes</option>
+										<option value="0" selected="selected">No</option>
 									</select>
 								</div>
 							</div>
