@@ -30,7 +30,7 @@
 									<th>BPrice</th>
 									<th>SPrice</th>
 									<th>Rol</th>
-									<th>Vatable</th>
+									<th>Qty</th>
 									<th>Status</th>
 									<th class="text-center">Options</th>
 								</tr>
@@ -46,7 +46,7 @@
 									<td><span class="label label-warning label-as-badge">{{$item->bprice}}</span></td>
 									<td><span class="label label-primary label-as-badge">{{$item->sprice}}</span></td>
 									<td><span class="label label-danger label-as-badge">{{$item->rol}}</span></td>
-									<td>@if($item->vatable==0) No @else Yes @endif</td>
+									<td>{{Stockspro::getItemQty($item->code,Auth()->User()->station)}}</td>
 									<td>@if($item->status==0) <span class="text-danger"> InActive</span> @else <span class="text-succes">Active</span> @endif</td>
 									<td  class="text-center">
 										<div class="btn-group">
